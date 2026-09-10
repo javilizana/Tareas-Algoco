@@ -91,6 +91,44 @@ def generarGraficos(ruta_csv, directorio_salida):
         plt.grid(True, which="both", ls="--", alpha=0.5)
         plt.savefig(os.path.join(directorio_salida, f'uso_memoria_{tipo}.png'))
         plt.close()
+        
+    #graficos generales (promedios de todos los tipos)
+    df_general = df.groupby(['algoritmo', 'n']).mean(numeric_only=True).reset_index()
+    
+    #grafico 3: tiempo de ejecucion vs N (general)
+    plt.figure(figsize=(10, 6))
+    for algo in algoritmos:
+        datos = df_general[df_general['algoritmo'] == algo]
+        if not datos.empty:
+            estilo = estilos_algo.get(algo, estilo_por_defecto)
+            plt.plot(datos['n'], datos['tiempo_ms'], label=algo, **estilo)
+        
+    plt.title('Tiempo de Ejecución vs Tamaño (N) - General')
+    plt.xlabel('Tamaño del Arreglo (N)')
+    plt.ylabel('Tiempo (ms)')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.legend()
+    plt.grid(True, which="both", ls="--", alpha=0.5)
+    plt.savefig(os.path.join(directorio_salida, 'tiempo_ejecucion_general.png'))
+    plt.close()
+    
+    #grafico 4: uso de memoria  vs N (general)
+    plt.figure(figsize=(10, 6))
+    for algo in algoritmos:
+        datos = df_general[df_general['algoritmo'] == algo]
+        if not datos.empty:
+            estilo = estilos_algo.get(algo, estilo_por_defecto)
+            plt.plot(datos['n'], datos['memoria_kb'], label=algo, **estilo)
+            
+    plt.title('Uso de Memoria vs Tamaño (N) - General')
+    plt.xlabel('Tamaño del Arreglo (N)')
+    plt.ylabel('Memoria (KB)')
+    plt.xscale('log')
+    plt.legend()
+    plt.grid(True, which="both", ls="--", alpha=0.5)
+    plt.savefig(os.path.join(directorio_salida, 'uso_memoria_general.png'))
+    plt.close()
     
     #print(f"Gráficos generados exitosamente en: {directorio_salida}")
     print(f"Gráficos detallados por tipo generados exitosamente en: {directorio_salida}")
