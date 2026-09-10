@@ -36,6 +36,16 @@ def generarGraficos(ruta_csv, directorio_salida):
         'aleatorio': {'linestyle': '-.', 'marker': '^'}
     }"""
     
+    #Definimos estilos visuales específicos para cada algoritmo
+    estilos_algo = {
+        'MergeSort': {'ls': '-', 'marker': 'o', 'alpha': 0.8, 'lw': 2},
+        'QuickSort': {'ls': '--', 'marker': 's', 'alpha': 0.8, 'lw': 2},
+        'std::sort': {'ls': ':', 'marker': '^', 'alpha': 0.8, 'lw': 2.5},
+        'PatienceSort': {'ls': '-.', 'marker': 'D', 'alpha': 0.8, 'lw': 2}
+    }
+    
+    estilo_por_defecto = {'ls': '-', 'marker': 'x', 'alpha': 0.8, 'lw': 2}
+    
     for tipo in tipos:
         if tipo == 'desconocido':
             continue
@@ -47,7 +57,10 @@ def generarGraficos(ruta_csv, directorio_salida):
         for algo in algoritmos:
             datos = df_tipo[df_tipo['algoritmo'] == algo]
             if not datos.empty:
-                plt.plot(datos['n'], datos['tiempo_ms'], marker='o', label=algo)
+                #obtenemos el estilo correspondiente al algoritmo
+                estilo = estilos_algo.get(algo, estilo_por_defecto)
+                plt.plot(datos['n'], datos['tiempo_ms'], label=algo, **estilo)
+                #plt.plot(datos['n'], datos['tiempo_ms'], marker='o', label=algo)
                 
         plt.title(f'Tiempo de Ejecución vs Tamaño (N) - Arreglo {tipo.capitalize()}')
         plt.xlabel('Tamaño del Arreglo (N)')
@@ -65,7 +78,10 @@ def generarGraficos(ruta_csv, directorio_salida):
         for algo in algoritmos:
             datos = df_tipo[df_tipo['algoritmo'] == algo]
             if not datos.empty:
-                plt.plot(datos['n'], datos['memoria_kb'], marker='s', label=algo)
+                #obtenemos el estilo correspondiente al algoritmo
+                estilo = estilos_algo.get(algo, estilo_por_defecto)
+                plt.plot(datos['n'], datos['memoria_kb'], label=algo, **estilo)
+                #plt.plot(datos['n'], datos['memoria_kb'], marker='s', label=algo)
 
         plt.title(f'Uso de Memoria vs Tamaño (N) - Arreglo {tipo.capitalize()}')
         plt.xlabel('Tamaño del Arreglo (N)')

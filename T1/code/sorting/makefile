@@ -18,3 +18,8 @@ sorting_patiencesort: sorting.cpp $(ALGO_DIR)/patiencesort.cpp
 
 clean:
 	rm -f sorting_sort sorting_mergesort sorting_quicksort sorting_patiencesort
+run_all: all
+	./sorting_mergesort data/array_input/ MergeSort data/measurements/mediciones.txt
+	./sorting_quicksort data/array_input/ QuickSort data/measurements/mediciones.txt
+	./sorting_patiencesort data/array_input/ PatienceSort data/measurements/mediciones.txt
+	./sorting_sort data/array_input/ std::sort data/measurements/mediciones.txt
