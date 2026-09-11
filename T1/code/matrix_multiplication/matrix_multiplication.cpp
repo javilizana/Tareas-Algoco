@@ -150,7 +150,9 @@ void ejecutarAlgoritmo(const string& nombre_algoritmo, const vector<vector<int>>
         archivo_csv << ruta_input1 << "," << ruta_input2 << "," << nombre_algoritmo << "," << n << "," << tiempo_ms << "," << memoria_kb << "\n";
         archivo_csv.close();
     }
-    cout << "[" << nombre_algoritmo << "] " << base << " -> N=" << n << " | Tiempo: " << tiempo_ms << " ms | Memoria: " << memoria_kb << " Kb\n";
+    
+    //descomentar esta línea si se quiere ver por pantalla en que matriz/algoritmo va:
+    //cout << "[" << nombre_algoritmo << "] " << base << " -> N=" << n << " | Tiempo: " << tiempo_ms << " ms | Memoria: " << memoria_kb << " Kb\n";
                             
 }
 
@@ -220,14 +222,17 @@ int main(int argc, char* argv[]){
         }
     }
 
+    /*
     cout << "\nTodas las matrices procesadas. Llamando a Python para generar graficas...\n";
     int resultado = std::system("cd scripts && python3 plot_generator.py");
+
 
     if (resultado == 0){
         cout << "Graficas generadas exitosamente.\n";
     } else {
         cerr << "Error al generar graficas.\n";
-    }
+    }*/
 
+    cout << "\nTodas las matrices procesadas.\n";
     return 0;
 }   

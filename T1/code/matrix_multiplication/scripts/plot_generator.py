@@ -116,9 +116,66 @@ def generarGraficos(ruta_csv, directorio_salida):
     
     print(f"Gráficos detallados por tipo de matriz generados exitosamente en: {directorio_salida}")
 
+#funcion que lee el CSV, agrupa los datos y muestra una tabla resumen en la terminal
+def imprimirTabla(ruta_csv):
+    try:
+        #df = pd.read_csv(ruta_csv, header=None, names=['archivo1', 'archivo2', 'algoritmo', 'n', 'tiempo_ms', 'memoria_kb'])
+        df = pd.read_csv(ruta_csv)
+    except FileNotFoundError:
+        print(f"Error: No se encontró el archivo {ruta_csv}")
+        return
+    
+    columnas_req = ['archivo1', 'algoritmo', 'n', 'tiempo_ms', 'memoria_kb']
+    if not all(col in df.columns for col in columnas_req):
+        print("Error: El archivo CSV no tiene el formato esperado")
+        return
+    
+    
+    #extraemos el tipo de matriz desde la ruta del archivo1
+    def extraer_tipo_matriz(ruta):
+        partes = str(ruta).split('_')
+        if len(partes) > 1:
+            return partes[1] # Ej: "densa"
+        return 'desconocido'
+    
+    df['tipo'] = df['archivo1'].apply(extraer_tipo_matriz)
+    
+    #convertimos a tipos numericos para asegurar un calculo correcto
+    #df['n'] = pd.to_numeric(df['n'])
+    df['n'] = pd.to_numeric(df['n'], errors='coerce')
+    #df['tiempo_ms'] = pd.to_numeric(df['tiempo_ms'])
+    df['tiempo_ms'] = pd.to_numeric(df['tiempo_ms'], errors='coerce')
+    #df['memoria_kb'] = pd.to_numeric(df['memoria_kb'])
+    df['memoria_kb'] = pd.to_numeric(df['memoria_kb'], errors='coerce')
+    
+    #eliminamos posibles filas nulas que hayan fallado en la conversion
+    df = df.dropna(subset=['n', 'tiempo_ms', 'memoria_kb'])
+    
+    #agrupamos y calculamos promedios de tiempo y max de memoria
+    resumen = df.groupby(['algoritmo', 'tipo', 'n']).agg(
+        tiempo_ms=('tiempo_ms', 'mean'),
+        memoria_kb=('memoria_kb', 'max')
+    ).reset_index()
+    
+    #redondeamos para mejorar la lectura
+    resumen['tiempo_ms'] = resumen['tiempo_ms'].round(2)
+    
+    #imprimimos
+    print("\n" + "="*85)
+    print(f"{'Algoritmo':<15} {'Tipo Matriz':<20} {'N':<15} {'Tiempo Prom. (ms)':<20} {'Memoria (KB)':<15}")
+    print("-" * 85)
+    for _, row in resumen.iterrows():
+        print(f"{row['algoritmo']:<15} {row['tipo']:<20} {str(int(row['n'])):<15} {str(row['tiempo_ms']):<20} {str(int(row['memoria_kb'])):<15}")
+    print("="*85 + "\n")
+    
+
 if __name__ == "__main__":
     #las rutas asumen que el script se ejecuta desde code/matrix_multiplication/scripts/
     archivo_csv = "../data/measurements/mediciones.txt"
     carpeta_salida = "../data/plots/"
     
+    #llamamos para imprimir la tabla
+    imprimirTabla(archivo_csv)
+    
+    #llamamos para generar los graficos
     generarGraficos(archivo_csv, carpeta_salida)
