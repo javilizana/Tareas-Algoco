@@ -16,7 +16,7 @@ using Matriz = vector<int>;
 Matriz sumar(const Matriz& A, const Matriz& B, int n){
     Matriz C(n * n);
 
-    for(int i = 0; i < n * n; n++){
+    for(int i = 0; i < n * n; i++){
         C[i] = A[i] + B[i];
     }
     return C;
@@ -26,7 +26,7 @@ Matriz sumar(const Matriz& A, const Matriz& B, int n){
 Matriz restar(const Matriz& A, const Matriz& B, int n){
     Matriz C(n * n);
 
-    for(int i = 0; i < n * n; n++){
+    for(int i = 0; i < n * n; i++){
         C[i] = A[i] - B[i];
     }
 
@@ -45,7 +45,7 @@ Matriz extraerSubM(const Matriz& M, int n, int mitad, int filaOffset, int colaOf
 }
 
 //algoritmo de strassen (representacion plana), recibe y retorna matrices de tamaño n x n
-Matriz Strassen(const Matriz& M1, const Matriz& M2, int n){
+Matriz StrassenPlano(const Matriz& M1, const Matriz& M2, int n){
 
     //caso base: si la matriz es 1x1, se retorna el producto de sus unicos elementos
     if (n == 1){
@@ -66,13 +66,13 @@ Matriz Strassen(const Matriz& M1, const Matriz& M2, int n){
     Matriz H = extraerSubM(M2, n, mitad, mitad, mitad);
 
     //Calculamos los 7 productos P1 a P7 recursivamente siguiendo las ec de strassen
-    Matriz P1 = Strassen(A, restar(F, H, mitad), mitad);
-    Matriz P2 = Strassen(sumar(A, B, mitad), H, mitad);
-    Matriz P3 = Strassen(sumar(C, D, mitad), E, mitad);
-    Matriz P4 = Strassen(D, restar(G, E, mitad), mitad);
-    Matriz P5 = Strassen(sumar(A, D, mitad), sumar(E, H, mitad), mitad);
-    Matriz P6 = Strassen(restar(B, D, mitad), sumar(G, H, mitad), mitad);
-    Matriz P7 = Strassen(restar(A, C, mitad), sumar(E, F, mitad), mitad);
+    Matriz P1 = StrassenPlano(A, restar(F, H, mitad), mitad);
+    Matriz P2 = StrassenPlano(sumar(A, B, mitad), H, mitad);
+    Matriz P3 = StrassenPlano(sumar(C, D, mitad), E, mitad);
+    Matriz P4 = StrassenPlano(D, restar(G, E, mitad), mitad);
+    Matriz P5 = StrassenPlano(sumar(A, D, mitad), sumar(E, H, mitad), mitad);
+    Matriz P6 = StrassenPlano(restar(B, D, mitad), sumar(G, H, mitad), mitad);
+    Matriz P7 = StrassenPlano(restar(A, C, mitad), sumar(E, F, mitad), mitad);
 
     //combinamos las submatrices resultantes en los cuadrantes finales
     Matriz C11 = sumar(restar(sumar(P5, P4, mitad), P2, mitad), P6, mitad);
@@ -91,5 +91,31 @@ Matriz Strassen(const Matriz& M1, const Matriz& M2, int n){
         }
     }
     
+    return Resultado;
+}
+
+//wrapper que mantiene la firma original (vector<vector<int>>) para no romper
+//la interfaz usada por matrix_multiplication.cpp: convierte a/desde representacion plana
+vector<vector<int>> Strassen(const vector<vector<int>>& M1, const vector<vector<int>>& M2){
+    int n = M1.size();
+
+    //convertimos la entrada de vector<vector<int>> a arreglo plano
+    Matriz M1_plano(n * n), M2_plano(n * n);
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            M1_plano[i * n + j] = M1[i][j];
+            M2_plano[i * n + j] = M2[i][j];
+        }
+    }
+
+    Matriz Resultado_plano = StrassenPlano(M1_plano, M2_plano, n);
+
+    //convertimos el resultado de vuelta a vector<vector<int>>
+    vector<vector<int>> Resultado(n, vector<int>(n));
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            Resultado[i][j] = Resultado_plano[i * n +j];
+        }
+    }   
     return Resultado;
 }
