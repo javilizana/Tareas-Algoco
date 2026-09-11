@@ -23,3 +23,5 @@ run_all: all
 	./sorting_quicksort data/array_input/ QuickSort data/measurements/mediciones.txt
 	./sorting_patiencesort data/array_input/ PatienceSort data/measurements/mediciones.txt
 	./sorting_sort data/array_input/ std::sort data/measurements/mediciones.txt
+	@echo "\nTodos los arreglos procesados. Generando tabla y gráficas..."
+	cd scripts && python3 plot_generator.py

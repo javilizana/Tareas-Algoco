@@ -132,8 +132,41 @@ def generarGraficos(ruta_csv, directorio_salida):
     
     #print(f"Gráficos generados exitosamente en: {directorio_salida}")
     print(f"Gráficos detallados por tipo generados exitosamente en: {directorio_salida}")
+
+#funcion que lee el CSV, agrupa los datos y muestra una tabla resumen en la terminal
+def imprimirTabla(ruta_csv):
+    try:
+        df = pd.read_csv(ruta_csv, header=None, names=['archivo', 'algoritmo', 'n', 'tiempo_ms', 'memoria_kb'])
+    except FileNotFoundError:
+        return
     
+    #extraemos el tipo de archivo
+    df['tipo'] = df['archivo'].apply(extraer_tipo)
+
+    #agrupamos y calculamos promedios de tiempo y max de memoria
+    resumen = df.groupby(['algoritmo', 'tipo', 'n']).agg(
+        tiempo_ms=('tiempo_ms', 'mean'),
+        memoria_kb=('memoria_kb', 'max')
+    ).reset_index()
+    
+    #redondeamos para mejorar la lectura
+    resumen['tiempo_ms'] = resumen['tiempo_ms'].round(2)
+    
+    #imprimimos
+    print("\n" + "="*80)
+    print(f"{'Algoritmo':<15} {'Tipo':<20} {'N':<15} {'Tiempo (ms)':<15} {'Memoria (KB)':<15}")
+    print("-" * 80)
+    for _, row in resumen.iterrows():
+        print(f"{row['algoritmo']:<15} {row['tipo']:<20} {str(row['n']):<15} {str(row['tiempo_ms']):<15} {str(row['memoria_kb']):<15}")
+    print("="*80 + "\n")
+
+  
 if __name__ == "__main__":
     archivo_csv = "../data/measurements/mediciones.txt" 
     carpeta_salida = "../data/plots/"
+    
+    #llamamos para imprimir la tabla
+    imprimirTabla(archivo_csv)
+    
+    #llamamos para generar los graficos
     generarGraficos(archivo_csv, carpeta_salida)
