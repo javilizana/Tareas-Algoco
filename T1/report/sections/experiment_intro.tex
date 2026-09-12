@@ -1,5 +1,11 @@
-\begin{mdframed}
-    \textbf{La extensión máxima para esta sección es de media página.}
-\end{mdframed}
+Los experimentos y mediciones de tiempo de esta Tarea 1 fueron ejecutados bajo las siguientes especificaciones técnicas:
 
-Especifique el hardware y software utilizado para realizar los experimentos (por ejemplo, procesador, memoria RAM, sistema operativo, compilador y versión). Incluya una mención breve de los datasets utilizados, los cuales son los descritos en el enunciado de la tarea.
+\begin{itemize}
+    \item \textbf{Hardware:} Procesador 13th Gen Intel(R) Core(TM) i5-1335U @ 1.30 GHz con 16 GB de memoria RAM.
+    
+    \item \textbf{Sistema Operativo:} Windows 11 Pro (versión 25H2) utilizando el subsistema Windows para Linux (WSL) con la distribución Ubuntu 24.04.2 LTS (con aproximadamente 7.6 GiB de RAM asignada) como entorno de ejecución principal.
+    
+    \item \textbf{Compilador y Herramientas:} Los algoritmos fueron implementados en C++ y compilados con G++ versión 13.3.0 dentro del entorno Linux. La generación de los casos de prueba y los gráficos de resultados se realizaron utilizando Python 3.12.3.
+\end{itemize}
+
+Para la evaluación empírica, se utilizaron los datasets sintéticos descritos en el enunciado, generados mediante los scripts proporcionados en la carpeta de la tarea. Para los \textbf{algoritmos de ordenamiento} se generaron arreglos de tamaño $n$ para analizar el comportamiento temporal de los algoritmos (Mergesort, Patiencesort, Quicksort y Sort nativo de C++) bajo tres condiciones iniciales: datos generados aleatoriamente, ordenados de forma ascendente y de forma descendente. Por otro lado, para la \textbf{multiplicación de matrices}, se utilizaron matrices cuadradas de $n \times n$ pobladas con números enteros aleatorios para comparar el rendimiento temporal y espacial del algoritmo clásico (Naive) frente al algoritmo de Strassen.

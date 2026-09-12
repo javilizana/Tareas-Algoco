@@ -119,7 +119,6 @@ def generarGraficos(ruta_csv, directorio_salida):
 #funcion que lee el CSV, agrupa los datos y muestra una tabla resumen en la terminal
 def imprimirTabla(ruta_csv):
     try:
-        #df = pd.read_csv(ruta_csv, header=None, names=['archivo1', 'archivo2', 'algoritmo', 'n', 'tiempo_ms', 'memoria_kb'])
         df = pd.read_csv(ruta_csv)
     except FileNotFoundError:
         print(f"Error: No se encontró el archivo {ruta_csv}")
@@ -141,11 +140,8 @@ def imprimirTabla(ruta_csv):
     df['tipo'] = df['archivo1'].apply(extraer_tipo_matriz)
     
     #convertimos a tipos numericos para asegurar un calculo correcto
-    #df['n'] = pd.to_numeric(df['n'])
     df['n'] = pd.to_numeric(df['n'], errors='coerce')
-    #df['tiempo_ms'] = pd.to_numeric(df['tiempo_ms'])
     df['tiempo_ms'] = pd.to_numeric(df['tiempo_ms'], errors='coerce')
-    #df['memoria_kb'] = pd.to_numeric(df['memoria_kb'])
     df['memoria_kb'] = pd.to_numeric(df['memoria_kb'], errors='coerce')
     
     #eliminamos posibles filas nulas que hayan fallado en la conversion

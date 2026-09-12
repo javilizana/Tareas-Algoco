@@ -1,5 +1,2 @@
-\begin{mdframed}
-    \textbf{La extensión máxima para esta sección es un párrafo breve (máximo 1/4 de página).}
-\end{mdframed}
-
-Escriba una conclusión breve que interprete los resultados más importantes. Cada afirmación debe estar respaldada por los datos presentados.
+Los resultados demuestran que las cotas de complejidad asintótica proporcionan una orientación indispensable sobre la escalabilidad teórica en el límite ($N \to \infty$), pero resultan insuficientes por sí solas para predecir el rendimiento absoluto en hardware contemporáneo. Las constantes multiplicativas de bajo nivel, la localidad de acceso a la memoria y el costo de asignación dinámica constituyen factores determinantes en la práctica.\\
+En el ordenamiento unidimensional, la eficiencia \textit{in-place} de \texttt{QuickSort} y la naturaleza adaptativa de \texttt{std::sort} las consolidan como las alternativas más convenientes. En multiplicación matricial, la ventaja subcúbica de Strassen permanece eclipsada por sus elevadas constantes ocultas, demostrando que su implementación solo es viable en la práctica cuando se complementa con umbrales de detención híbridos que conmuten a multiplicación iterativa tradicional en tamaños moderados
